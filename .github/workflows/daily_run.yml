@@ -1,0 +1,35 @@
+name: Daily Gold Analysis
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天北京时间早上8点运行
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install yfinance google-generativeai
+
+      - name: Run analysis
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python daily_gold_analysis.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "GoldBot"
+          git config --global user.email "bot@github.com"
+          git add README.md
+          git commit -m "Update daily analysis with Gemini" || exit 0
+          git push
