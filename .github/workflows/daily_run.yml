@@ -18,12 +18,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install yfinance google-genai  # 注意这里换成了最新的 google-genai
+          pip install yfinance google-genai httpx
 
       - name: Run analysis
         env:
@@ -35,5 +35,5 @@ jobs:
           git config --global user.name "jackyma678-bot"
           git config --global user.email "jackyma678@users.noreply.github.com"
           git add README.md
-          git commit -m "Update daily analysis [skip ci]" || echo "No changes to commit"
+          git commit -m "Update daily analysis with Gemini 3.1 [skip ci]" || echo "No changes to commit"
           git push origin main
