@@ -9,6 +9,7 @@
 
 ## 文章来源
 
+- **最新文章**：`_posts/2026-03-31-0637-黄金价格高位震荡技术形态突破在即深度行情前瞻.md`
 - 文章存放目录：`_posts/`
 - 生成脚本：`daily_gold_analysis.py`
 - 定时任务：`.github/workflows/daily_run.yml`（每 15 分钟）
