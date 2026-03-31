@@ -2,7 +2,8 @@ name: Daily Gold Analysis
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    # 每小时（UTC 整点）在周一到周五运行一次
+    - cron: '0 * * * 1-5'
   workflow_dispatch:
 
 permissions:
