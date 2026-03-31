@@ -17,3 +17,17 @@ layout: default
   {% if page.previous %}<a href="{{ page.previous.url | relative_url }}">← 上一篇</a>{% endif %}
   {% if page.next %}<a style="float:right" href="{{ page.next.url | relative_url }}">下一篇 →</a>{% endif %}
 </div>
+
+<h3 class="related-heading">相关阅读</h3>
+<ul class="related-list">
+{% assign related_count = 0 %}
+{% for post in site.posts %}
+  {% if post.url != page.url and related_count < 5 %}
+  <li>
+    <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+    <span class="related-meta">（{{ post.date | date: "%Y-%m-%d" }}）</span>
+  </li>
+  {% assign related_count = related_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+</ul>
