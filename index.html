@@ -1,0 +1,37 @@
+---
+layout: default
+title: "最新文章"
+description: "黄金形态通APP：每 15 分钟自动生成一篇黄金行情分析。"
+---
+
+<h2>最新文章</h2>
+
+<ul>
+  {% for post in paginator.posts %}
+    <li>
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      <span style="color:#475569;font-size:14px;">（{{ post.date | date: "%Y-%m-%d %H:%M UTC" }}）</span>
+      {% if post.description %}
+        <div style="color:#475569;font-size:14px;margin-top:6px;">{{ post.description }}</div>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+
+<div style="display:flex;gap:12px;align-items:center;margin-top:18px;">
+  {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path | relative_url }}">← 上一页</a>
+  {% endif %}
+  <div style="color:#475569;font-size:14px;">第 {{ paginator.page }} / {{ paginator.total_pages }} 页</div>
+  {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path | relative_url }}">下一页 →</a>
+  {% endif %}
+</div>
+
+<h2 style="margin-top:26px;">归档与订阅</h2>
+
+<ul>
+  <li><a href="{{ "/archive/" | relative_url }}">全部文章归档</a></li>
+  <li><a href="{{ "/feed.xml" | relative_url }}">RSS（feed.xml）</a></li>
+  <li><a href="{{ "/sitemap.xml" | relative_url }}">站点地图（sitemap.xml）</a></li>
+</ul>

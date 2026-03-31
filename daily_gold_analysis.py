@@ -125,6 +125,8 @@ def run_analysis():
             f'title: "{safe_title}"\n'
             f"date: {now.strftime('%Y-%m-%d %H:%M:%S')} +0000\n"
             f'description: "{safe_desc}"\n'
+            f"lastmod: {now.strftime('%Y-%m-%d %H:%M:%S')} +0000\n"
+            'keywords: ["黄金","XAU/USD","黄金行情","技术分析","形态识别","金价"]\n'
             "categories: [gold]\n"
             "tags: [gold, xauusd, analysis]\n"
             "---\n\n"

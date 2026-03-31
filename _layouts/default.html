@@ -6,11 +6,55 @@
     <title>
       {% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}
     </title>
-    <meta name="description" content="{{ page.description | default: site.description | escape }}" />
-    <link rel="canonical" href="{{ page.url | absolute_url }}" />
+    {% assign seo_title = page.title | default: site.title %}
+    {% assign seo_desc = page.description | default: site.description %}
+    {% assign seo_url = page.url | absolute_url %}
+    {% assign seo_keywords = page.keywords | default: page.tags | default: site.keywords %}
+    {% assign seo_lastmod = page.lastmod | default: page.date %}
+
+    <meta name="description" content="{{ seo_desc | escape }}" />
+    {% if seo_keywords %}
+      <meta name="keywords" content="{% if seo_keywords | join: ',' %}{{ seo_keywords | join: ',' | escape }}{% else %}{{ seo_keywords | escape }}{% endif %}" />
+    {% endif %}
+    <link rel="canonical" href="{{ seo_url }}" />
+
+    <meta property="og:site_name" content="{{ site.title | escape }}" />
+    <meta property="og:title" content="{{ seo_title | escape }}" />
+    <meta property="og:description" content="{{ seo_desc | escape }}" />
+    <meta property="og:url" content="{{ seo_url }}" />
+    <meta property="og:locale" content="zh_CN" />
+    {% if page.date %}
+      <meta property="og:type" content="article" />
+      <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}" />
+    {% else %}
+      <meta property="og:type" content="website" />
+    {% endif %}
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="{{ seo_title | escape }}" />
+    <meta name="twitter:description" content="{{ seo_desc | escape }}" />
+
+    {% if seo_lastmod %}
+      <meta name="lastmod" content="{{ seo_lastmod | date_to_xmlschema }}" />
+    {% endif %}
 
     <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}" />
     <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | relative_url }}" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "{% if page.date %}BlogPosting{% else %}WebSite{% endif %}",
+        "headline": {{ seo_title | jsonify }},
+        "description": {{ seo_desc | jsonify }},
+        "url": {{ seo_url | jsonify }},
+        {% if page.date %}
+        "datePublished": {{ page.date | date_to_xmlschema | jsonify }},
+        {% if seo_lastmod %}"dateModified": {{ seo_lastmod | date_to_xmlschema | jsonify }},{% endif %}
+        {% endif %}
+        "inLanguage": "zh-CN"
+      }
+    </script>
   </head>
   <body>
     <header class="site-header">
@@ -18,6 +62,7 @@
         <a class="brand" href="{{ "/" | relative_url }}">{{ site.title }}</a>
         <nav class="nav">
           <a href="{{ "/" | relative_url }}">首页</a>
+          <a href="{{ "/archive/" | relative_url }}">归档</a>
           <a href="{{ "/feed.xml" | relative_url }}">RSS</a>
           <a href="https://github.com/gold-pattern-pro/gold-article">GitHub</a>
         </nav>
