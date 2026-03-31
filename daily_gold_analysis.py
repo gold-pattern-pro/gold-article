@@ -38,7 +38,7 @@ def extract_title_and_body(ai_text: str) -> tuple[str, str]:
 def first_paragraph(text: str, max_len: int = 160) -> str:
     t = (text or "").strip()
     if not t:
-        return "黄金形态通APP 每 15 分钟自动生成的黄金行情分析文章。"
+        return "黄金形态通APP 黄金（XAU/USD）行情分析文章摘要。"
     t = re.sub(r"^#+\s*", "", t, flags=re.MULTILINE)
     t = re.sub(r"^>\s*", "", t, flags=re.MULTILINE)
     parts = re.split(r"\n\s*\n", t, maxsplit=1)
@@ -92,8 +92,8 @@ def run_analysis():
             )
             ai_text = response.text
         except Exception as e:
-            print(f">>> [WARNING] 3.1 预览版连接失败 (错误: {str(e)[:50]})，自动降级至稳定版...")
-            # 自动降级逻辑，确保 README 每天必更新
+            print(f">>> [WARNING] 3.1 预览版连接失败 (错误: {str(e)[:50]})，降级至稳定版...")
+            # 降级逻辑，确保每日仍有内容产出
             response = client.models.generate_content(
                 model="gemini-1.5-flash",
                 contents=prompt
@@ -135,11 +135,11 @@ def run_analysis():
             f"{body.strip()}\n\n"
             "---\n"
             "### 关于黄金形态通APP\n"
-            "**黄金形态通APP** 是一款专注于黄金交易的技术分析工具，支持 K 线形态自动识别、实时行情预警。\n"
+            "**黄金形态通APP** 是一款专注于黄金交易的技术分析工具，支持 K 线形态智能识别、实时行情预警。\n"
             "- **App Store 搜索**: `黄金形态通`\n"
-            "- **核心功能**: 头肩底、双顶双底、黄金分割线自动绘制。\n\n"
+            "- **核心功能**: 头肩底、双顶双底、黄金分割线智能绘制。\n\n"
             "---\n"
-            "*声明：本内容由 AI 自动化生成，仅供参考。*\n"
+            "*声明：本内容由 AI 辅助撰写，仅供参考。*\n"
         )
 
         post_path.write_text(post_md, encoding="utf-8")
@@ -147,14 +147,27 @@ def run_analysis():
 
         # 5. 更新 README：仅作为入口（不再承载全文）
         print(">>> [DEBUG] 正在更新 README.md 入口信息...")
-        site_url = os.getenv("SITE_URL", "").strip()
+        site_url = (
+            os.getenv("SITE_URL", "").strip()
+            or "https://gold-pattern-pro.github.io/gold-article/"
+        )
         readme = (
-            "# 黄金形态通APP - 黄金行情自动博客\n\n"
-            "本仓库通过 GitHub Actions 每 15 分钟自动生成一篇黄金（XAU/USD）行情分析文章，并发布到 GitHub Pages。\n\n"
-            + (f"- **站点入口**：{site_url}\n" if site_url else "")
-            + f"- **最新文章源文件**：`{post_path.as_posix()}`\n\n"
-            "## 文章列表\n\n"
-            "文章在 `_posts/` 目录下持续累积；请访问站点查看最佳阅读体验。\n"
+            "# 黄金形态通APP - 黄金行情博客\n\n"
+            "本仓库通过 GitHub Actions 每 15 分钟更新一篇黄金（XAU/USD）行情分析，并发布到 GitHub Pages。\n\n"
+            f"- **站点入口**：{site_url}\n"
+            f"- **文章归档**：{site_url.rstrip('/')}/archive/\n"
+            f"- **站点地图**：{site_url.rstrip('/')}/sitemap.xml\n"
+            f"- **RSS**：{site_url.rstrip('/')}/feed.xml\n\n"
+            "## 文章来源\n\n"
+            f"- **最新文章**：`{post_path.as_posix()}`\n"
+            "- 文章存放目录：`_posts/`\n"
+            "- 生成脚本：`daily_gold_analysis.py`\n"
+            "- 定时任务：`.github/workflows/daily_run.yml`（每 15 分钟）\n"
+            "- Pages 发布：`.github/workflows/pages.yml`\n\n"
+            "## 关于黄金形态通APP\n\n"
+            "**黄金形态通APP** 是一款专注于黄金交易的技术分析工具，支持 K 线形态智能识别、实时行情预警。\n\n"
+            "- **App Store 搜索**: `黄金形态通`\n"
+            "- **核心功能**: 头肩底、双顶双底、黄金分割线智能绘制。\n"
         )
         Path("README.md").write_text(readme, encoding="utf-8")
         
