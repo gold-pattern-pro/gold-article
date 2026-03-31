@@ -9,10 +9,12 @@
 
 ## 文章来源
 
-- **最新文章**：`_posts/2026-03-31-0637-黄金价格高位震荡技术形态突破在即深度行情前瞻.md`
+- **最新文章**：`_posts/2026-03-31-1006-黄金高位波动加剧盘面技术形态重构与多空博弈的关键节点.md`
+- **社交分享草稿**：`social/latest.txt`
+- **运行健康**：`automation/health.json`
 - 文章存放目录：`_posts/`
 - 生成脚本：`daily_gold_analysis.py`
-- 定时任务：`.github/workflows/daily_run.yml
+- 定时任务：`.github/workflows/daily_run.yml`
 - Pages 发布：`.github/workflows/pages.yml`
 
 ## 关于黄金形态通APP
