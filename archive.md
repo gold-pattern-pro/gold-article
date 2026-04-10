@@ -1,7 +1,8 @@
 ---
 layout: default
 title: "文章归档"
-description: "黄金形态通APP：全部历史文章归档。"
+description: "黄金形态通APP：全部历史黄金（XAU/USD）行情分析文章归档，按时间倒序。"
+keywords: "黄金文章归档,XAUUSD,黄金形态通"
 permalink: /archive/
 ---
 

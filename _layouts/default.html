@@ -3,79 +3,132 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#0b1220" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>
       {% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}
     </title>
     {% assign seo_title = page.title | default: site.title %}
     {% assign seo_desc = page.description | default: site.description %}
     {% assign seo_url = page.url | absolute_url %}
-    {% assign seo_keywords = page.keywords | default: page.tags | default: site.keywords %}
-    {% assign seo_lastmod = page.lastmod | default: page.date %}
+    {% capture seo_keywords %}
+      {% if page.keywords %}
+        {{ page.keywords }}
+      {% elsif page.tags %}
+        {{ page.tags | join: ", " }}
+      {% else %}
+        {{ site.keywords }}
+      {% endif %}
+    {% endcapture %}
+    {% assign seo_keywords = seo_keywords | strip %}
+    {% assign seo_lastmod = page.last_modified_at | default: page.lastmod | default: page.date %}
 
-    <meta name="description" content="{{ seo_desc | escape }}" />
-    {% if seo_keywords %}
-      <meta name="keywords" content="{% if seo_keywords | join: ',' %}{{ seo_keywords | join: ',' | escape }}{% else %}{{ seo_keywords | escape }}{% endif %}" />
+    <meta name="description" content="{{ seo_desc | strip | escape }}" />
+    {% if seo_keywords != "" %}
+      <meta name="keywords" content="{{ seo_keywords | escape }}" />
     {% endif %}
     <link rel="canonical" href="{{ seo_url }}" />
 
+    {% if paginator.previous_page %}
+      <link rel="prev" href="{{ paginator.previous_page_path | absolute_url }}" />
+    {% endif %}
+    {% if paginator.next_page %}
+      <link rel="next" href="{{ paginator.next_page_path | absolute_url }}" />
+    {% endif %}
+
     <meta property="og:site_name" content="{{ site.title | escape }}" />
     <meta property="og:title" content="{{ seo_title | escape }}" />
-    <meta property="og:description" content="{{ seo_desc | escape }}" />
+    <meta property="og:description" content="{{ seo_desc | strip | escape }}" />
     <meta property="og:url" content="{{ seo_url }}" />
     <meta property="og:locale" content="zh_CN" />
     {% if page.date %}
       <meta property="og:type" content="article" />
       <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}" />
+      {% if seo_lastmod %}
+        <meta property="article:modified_time" content="{{ seo_lastmod | date_to_xmlschema }}" />
+      {% endif %}
     {% else %}
       <meta property="og:type" content="website" />
     {% endif %}
 
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="{{ seo_title | escape }}" />
-    <meta name="twitter:description" content="{{ seo_desc | escape }}" />
-
-    {% if seo_lastmod %}
-      <meta name="lastmod" content="{{ seo_lastmod | date_to_xmlschema }}" />
-    {% endif %}
+    <meta name="twitter:description" content="{{ seo_desc | strip | escape }}" />
 
     <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}" />
-    <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | relative_url }}" />
+    <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}" />
+    <link rel="alternate" type="application/xml" title="Sitemap" href="{{ "/sitemap.xml" | relative_url }}" />
 
+    {% if page.date %}
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "{% if page.date %}BlogPosting{% else %}WebSite{% endif %}",
+        "@type": "BlogPosting",
         "headline": {{ seo_title | jsonify }},
-        "description": {{ seo_desc | jsonify }},
+        "description": {{ seo_desc | strip | jsonify }},
         "url": {{ seo_url | jsonify }},
-        {% if page.date %}
         "datePublished": {{ page.date | date_to_xmlschema | jsonify }},
         {% if seo_lastmod %}"dateModified": {{ seo_lastmod | date_to_xmlschema | jsonify }},{% endif %}
-        {% endif %}
-        "inLanguage": "zh-CN"
+        "inLanguage": "zh-CN",
+        "author": {
+          "@type": "Organization",
+          "name": {{ site.author.name | default: site.title | jsonify }}{% if site.author.url %},
+          "url": {{ site.author.url | jsonify }}{% endif %}
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": {{ site.title | jsonify }}
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": {{ seo_url | jsonify }}
+        }
       }
     </script>
+    {% else %}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": {{ site.title | jsonify }},
+        "description": {{ site.description | strip | jsonify }},
+        "url": {{ "/" | absolute_url | jsonify }},
+        "inLanguage": "zh-CN",
+        "publisher": {
+          "@type": "Organization",
+          "name": {{ site.author.name | default: site.title | jsonify }}
+        }
+      }
+    </script>
+    {% endif %}
   </head>
   <body>
+    <a class="skip-link" href="#main">跳到正文</a>
     <header class="site-header">
       <div class="container">
         <a class="brand" href="{{ "/" | relative_url }}">{{ site.title }}</a>
-        <nav class="nav">
+        <nav class="nav" aria-label="主导航">
           <a href="{{ "/" | relative_url }}">首页</a>
           <a href="{{ "/archive/" | relative_url }}">归档</a>
           <a href="{{ "/feed.xml" | relative_url }}">RSS</a>
-          <a href="https://github.com/gold-pattern-pro/gold-article">GitHub</a>
+          <a href="https://github.com/gold-pattern-pro/gold-article" rel="noopener noreferrer" target="_blank">GitHub</a>
         </nav>
       </div>
     </header>
 
-    <main class="container">
+    <main id="main" class="container" role="main">
       {{ content }}
     </main>
 
     <footer class="site-footer">
       <div class="container">
         <div>© {{ site.time | date: "%Y" }} · {{ site.title }}</div>
+        <div class="footer-meta">
+          <a href="{{ "/sitemap.xml" | relative_url }}">站点地图</a>
+          ·
+          <a href="{{ "/robots.txt" | relative_url }}">robots.txt</a>
+        </div>
       </div>
     </footer>
   </body>

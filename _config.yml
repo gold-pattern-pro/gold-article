@@ -1,5 +1,5 @@
 title: "黄金形态通APP - 黄金行情博客"
-description: "每 15 分钟更新：黄金（XAU/USD）K线形态与技术面解读。"
+description: "黄金形态通：工作日每小时更新黄金（XAU/USD）K 线形态与技术面解读，附 RSS 与站点地图。"
 lang: zh-CN
 timezone: UTC
 # 文章 date 为生成时刻 UTC，避免在整点构建时被判为「未来文章」而从 site.posts 剔除
@@ -8,14 +8,40 @@ future: true
 url: "https://gold-pattern-pro.github.io"
 baseurl: "/gold-article"
 
+author:
+  name: "黄金形态通"
+  url: "https://apps.apple.com/cn/app/%E9%BB%84%E9%87%91%E5%BD%A2%E6%80%81%E9%80%9A-ai%E9%BB%84%E9%87%91%E5%A4%96%E6%B1%87%E6%9C%9F%E8%B4%A7%E8%A1%8C%E6%83%85-%E5%AE%9E%E6%97%B6%E8%A1%8C%E6%83%85%E5%8A%A9%E6%89%8B/id6749507728"
+
+keywords: "黄金,XAUUSD,技术分析,K线,黄金形态通,行情分析"
+
 permalink: /posts/:year/:month/:day/:title/
 
 markdown: kramdown
 theme: minima
 
+# 静态托管端不再处理 Jekyll，但将 .nojekyll 放进 _site 可避免混用部署方式时的边缘问题
+include:
+  - .nojekyll
+
+exclude:
+  - daily_gold_analysis.py
+  - README.md
+  - automation
+  - social
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+
 plugins:
+  - jekyll-paginate
   - jekyll-feed
   - jekyll-sitemap
+
+paginate: 12
+paginate_path: "/page/:num/"
+
+feed:
+  posts_limit: 30
 
 defaults:
   - scope:
@@ -23,4 +49,7 @@ defaults:
       type: "posts"
     values:
       layout: "post"
-
+  - scope:
+      path: "google64233ec571c0ccb4.html"
+    values:
+      sitemap: false

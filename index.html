@@ -1,36 +1,37 @@
 ---
 layout: default
 title: "最新文章"
-description: "黄金形态通APP：工作日每小时更新一篇黄金行情分析。"
+description: "黄金形态通APP：工作日每小时更新一篇黄金（XAU/USD）行情分析。订阅 RSS 或查看站点地图获取全部页面。"
+keywords: "黄金行情,XAUUSD,最新分析,黄金形态通"
 ---
 
 <h2>最新文章</h2>
 
-<ul>
+<ul class="post-list">
   {% for post in paginator.posts %}
     <li>
       <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-      <span style="color:#475569;font-size:14px;">（{{ post.date | date: "%Y-%m-%d %H:%M UTC" }}）</span>
+      <span class="post-list-meta">（{{ post.date | date: "%Y-%m-%d %H:%M UTC" }}）</span>
       {% if post.description %}
-        <div style="color:#475569;font-size:14px;margin-top:6px;">{{ post.description }}</div>
+        <div class="post-list-desc">{{ post.description }}</div>
       {% endif %}
     </li>
   {% endfor %}
 </ul>
 
-<div style="display:flex;gap:12px;align-items:center;margin-top:18px;">
+<nav class="pager" aria-label="分页">
   {% if paginator.previous_page %}
     <a href="{{ paginator.previous_page_path | relative_url }}">← 上一页</a>
   {% endif %}
-  <div style="color:#475569;font-size:14px;">第 {{ paginator.page }} / {{ paginator.total_pages }} 页</div>
+  <span class="pager-status">第 {{ paginator.page }} / {{ paginator.total_pages }} 页</span>
   {% if paginator.next_page %}
     <a href="{{ paginator.next_page_path | relative_url }}">下一页 →</a>
   {% endif %}
-</div>
+</nav>
 
-<h2 style="margin-top:26px;">归档与订阅</h2>
+<h2 class="section-heading">归档与订阅</h2>
 
-<ul>
+<ul class="subscribe-list">
   <li><a href="{{ "/archive/" | relative_url }}">全部文章归档</a></li>
   <li><a href="{{ "/feed.xml" | relative_url }}">RSS（feed.xml）</a> — 可用阅读器或自动化工具订阅更新</li>
   <li><a href="{{ "/sitemap.xml" | relative_url }}">站点地图（sitemap.xml）</a> — 便于搜索引擎发现全部页面</li>

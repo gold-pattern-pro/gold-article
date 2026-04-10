@@ -25,6 +25,14 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-gold-${{ hashFiles('.github/workflows/daily_run.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-gold-
+
       - name: Install dependencies
         run: |
           pip install --upgrade pip
